@@ -22,8 +22,11 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     // Login table name
     private static final String TABLE_USER = "user";
+    private static final String TABLE_CARS = "cars";
+
 
     // Login Table Columns names
+
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
@@ -32,6 +35,18 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     private static final String KEY_NATIONALITY = "Nationality";
     private static final String KEY_UID = "uid";
     private static final String KEY_CREATED_AT = "created_at";
+
+
+    private static final String ID="ID";
+    private static final String NAME="Name";
+    private static final String LATITUDE="Latitude";
+    private static final String LONGITUDE="Longitude";
+    private static final String IMAGE_PATH="Image_Path";
+    private static final String FUEL_LEVEL="Fuel Level";
+    private static final String PROD_YEAR="Prod_Year";
+
+
+
 
     public SQLiteHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -46,14 +61,26 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 + KEY_CREATED_AT + " TEXT" + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
 
+
+        String CREATE_CARS_TABLE = "CREATE TABLE " + TABLE_CARS + "("
+                + ID + " INTEGER PRIMARY KEY," + NAME + " TEXT,"
+                + LATITUDE + " TEXT ," + LONGITUDE + "TEXT"+ IMAGE_PATH + "TEXT"+ FUEL_LEVEL + "TEXT"+PROD_YEAR + "TEXT" + ")";
+        db.execSQL(CREATE_CARS_TABLE);
+
+
         Log.d(TAG, "Database tables created");
+
+
     }
+
+
 
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CARS);
 
         // Create tables again
         onCreate(db);
@@ -100,6 +127,30 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             user.put("nationality", cursor.getString(5));
             user.put("uid", cursor.getString(6));
             user.put("created_at", cursor.getString(7));
+        }
+        cursor.close();
+        db.close();
+        // return user
+        Log.d(TAG, "Fetching user from Sqlite: " + user.toString());
+
+        return user;
+    }
+    public HashMap<String, String> getCarsDetails() {
+        HashMap<String, String> user = new HashMap<String, String>();
+        String selectQuery = "SELECT  * FROM " + TABLE_CARS;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // Move to first row
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+            user.put("Name", cursor.getString(1));
+            user.put("Latitude", cursor.getString(2));
+            user.put("Longitude", cursor.getString(3));
+            user.put("Image_Path", cursor.getString(4));
+            user.put("Fuel Level", cursor.getString(5));
+            user.put("Prod_Year", cursor.getString(6));
+
         }
         cursor.close();
         db.close();
