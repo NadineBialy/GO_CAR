@@ -21,6 +21,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,16 +63,19 @@ public class MainActivity extends Activity {
     public Location mLastKnownLocation;
     private boolean mLocationPermissionGranted;
     FusedLocationProviderClient mFusedLocationProviderClient;
-    double userLatitude;
-    double userLongtitude;
+    static double userLatitude;
+    static double userLongtitude;
     double earthRadius = 3958.75;
     String Latitude;
     String Longitude;
     car currentcar;
-    String carLat;
-    String catLng;
+    static String carLat;
+    static String catLng;
     private SQLiteHandler db;
     private SessionManager session;
+    String user_id ;
+    static String car_id ;
+    String car_name ;
 
 
 
@@ -92,17 +96,27 @@ public class MainActivity extends Activity {
         getLocationPermission();
         getDeviceLocation();
 
+       // Intent i = getIntent() ;
+       // user_id = i.getStringExtra("user_id") ;
+
+
+
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int arg2, long arg3) {
                 //  Toast.makeText(ListActivity.this, results[position], Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, MapsMarkerActivity.class);
+                Intent intent = new Intent(MainActivity.this, DeviceDetailActivity.class);
                 currentcar = (car) list.getItemAtPosition(arg2);
                 carLat = currentcar.getLatitude();
                 catLng = currentcar.getLongitude();
+                car_id = currentcar.getID() ;
+                car_name = currentcar.getName() ;
                 intent.putExtra("lat", carLat);
                 intent.putExtra("lng", catLng);
+                intent.putExtra("car_name", car_name) ;
+                //intent.putExtra("user_id" , user_id) ;
+                intent.putExtra("car_id" , car_id) ;
                 startActivity(intent);
 
 
@@ -126,9 +140,11 @@ public class MainActivity extends Activity {
 
         String name = user.get("name");
         String email = user.get("email");
+        String id = user.get("id") ;
 
         HashMap<String, String> cars = db.getUserDetails();
 
+        String ID = cars.get("ID") ;
         String Name = cars.get("Name");
         String Fuel_Level = cars.get("Fuel Level");
         String Longitude = cars.get("Longitude");
@@ -177,6 +193,7 @@ public class MainActivity extends Activity {
 
         // Launching the login activity
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        System.out.println(intent +"INTENT SUCC");
         startActivity(intent);
         finish();
     }
@@ -196,8 +213,12 @@ public class MainActivity extends Activity {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
-                            userLatitude = mLastKnownLocation.getLatitude() ;
-                            userLongtitude = mLastKnownLocation.getLongitude() ;
+                            System.out.println("SUCC TASK");
+                            if(mLastKnownLocation!= null){
+                                userLatitude = mLastKnownLocation.getLatitude() ;
+                                userLongtitude = mLastKnownLocation.getLongitude() ;
+                            }
+
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
@@ -205,6 +226,9 @@ public class MainActivity extends Activity {
                         }
                     }
                 });
+            }
+            else {
+                System.out.println("PERMISSION FAIL");
             }
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
@@ -243,11 +267,19 @@ public class MainActivity extends Activity {
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
-                try {
-                    loadIntoListView(s);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+               // Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+//                try {
+//                    loadIntoListView(s);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+                if (!TextUtils.isEmpty(s) && s!=null) {
+                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+                    try {
+                        loadIntoListView(s);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -290,8 +322,9 @@ public class MainActivity extends Activity {
             double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             double dist = earthRadius * c;
 
-            // imagepath[i] =  obj.getString("Image_Path" ) ;
+
             vehicles.add(new car(
+                    obj.getInt("ID"),
                     obj.getString("Name"),
                     obj.getString("Fuel_Level"),
                     obj.getString("Prod_Year"),
@@ -349,5 +382,3 @@ public class MainActivity extends Activity {
 
 
 }
-
-

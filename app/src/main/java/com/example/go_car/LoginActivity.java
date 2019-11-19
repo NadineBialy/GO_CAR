@@ -35,6 +35,7 @@ public class LoginActivity extends Activity {
     private ProgressDialog pDialog;
     private SessionManager session;
     private SQLiteHandler db;
+    String user_id ;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,12 +56,19 @@ public class LoginActivity extends Activity {
 
         // Session manager
         session = new SessionManager(getApplicationContext());
+//        HashMap<String, String> user = session.getUserDetails();
+//        user_id = user.get(SessionManager.KEY_userid);
+//        System.out.println(user_id + "ON CREATE");
+
+
 
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
+//            System.out.println(user_id + "INSIDE LOGGED IN");
+//            intent.putExtra("user_id" , user_id) ;
             finish();
         }
 
@@ -130,8 +138,11 @@ public class LoginActivity extends Activity {
                         String uid = jObj.getString("uid");
 
                         JSONObject user = jObj.getJSONObject("user");
+                        user_id = ""+user.getInt("id") ;
                         String name = user.getString("name");
                         String email = user.getString("email");
+                        System.out.println(user_id + "USSER SET");
+                        session.setUserId(user_id);
 
                         String created_at = user.getString("created_at");
 
@@ -172,6 +183,7 @@ public class LoginActivity extends Activity {
             protected Map<String, String> getParams() {
                 // Posting parameters to login url
                 Map<String, String> params = new HashMap<String, String>();
+                //params.put("id" , user_id) ;
                 params.put("email", email);
                 params.put("password", password);
 

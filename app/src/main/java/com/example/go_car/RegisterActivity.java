@@ -40,6 +40,7 @@ public class RegisterActivity extends Activity {
     private SessionManager session;
     private SQLiteHandler db;
     private ProgressDialog pDialog;
+    int id ;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,6 +137,7 @@ public class RegisterActivity extends Activity {
                         String uid = jObj.getString("uid");
 
                         JSONObject user = jObj.getJSONObject("user");
+                        id = user.getInt("id") ;
                         String name = user.getString("name");
                         String email = user.getString("email");
                         String age = user.getString("age");
@@ -144,7 +146,7 @@ public class RegisterActivity extends Activity {
                         String created_at = user.getString("created_at");
 
                         // Inserting row in users table
-                       // db.addUser(name, email, age, PhoneNumber, nationality, uid, created_at);
+                        // db.addUser(name, email, age, PhoneNumber, nationality, uid, created_at);
 
                         Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
 
@@ -182,6 +184,7 @@ public class RegisterActivity extends Activity {
             protected Map<String, String> getParams() {
                 // Posting params to register url
                 Map<String, String> params = new HashMap<String, String>();
+                params.put("id", Integer.toString(id));
                 params.put("name", name);
                 params.put("email", email);
                 params.put("password", password);
