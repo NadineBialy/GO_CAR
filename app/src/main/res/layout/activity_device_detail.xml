@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+
+<!--    <ListView-->
+<!--        android:id="@+id/list"-->
+<!--        android:layout_width="444dp"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:layout_weight="0.97"-->
+<!--        tools:layout_editor_absoluteX="16dp"-->
+<!--        tools:layout_editor_absoluteY="114dp">-->
+
+<!--    </ListView>-->
+
+
+    <TextView
+        android:id="@+id/car"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/imageView"
+        android:layout_marginLeft="22dp"
+        android:layout_marginBottom="28dp"
+        android:layout_toRightOf="@id/imageView"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="20dp" />
+
+
+
+    <TextView
+        android:id="@+id/text_r"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/imageView"
+        android:layout_marginLeft="22dp"
+        android:layout_marginBottom="28dp"
+        android:layout_toRightOf="@id/imageView"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Add Review Please "
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="555dp"
+        android:singleLine="false"/>
+
+    <Button
+        android:id="@+id/addReview"
+        android:layout_width="155dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="15dp"
+        android:background="@android:color/holo_red_light"
+        android:text="add review"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="615dp" />
+
+    <Button
+        android:id="@+id/navigate"
+        android:layout_width="155dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="15dp"
+        android:background="@android:color/holo_red_light"
+        android:text="Navigate to car"
+        tools:layout_editor_absoluteX="240dp"
+        tools:layout_editor_absoluteY="615dp" />
+
+
+</LinearLayout>
